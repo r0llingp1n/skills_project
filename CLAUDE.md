@@ -4,11 +4,11 @@ This project contains Claude Code skills — reusable prompt templates that exte
 
 ## Structure
 
-- `.claude/skills/` — Skill definition files (Markdown)
+- `.claude/commands/` — Skill definition files (Markdown)
 
 ## Adding a Skill
 
-Create a new `.md` file in `.claude/skills/`. Each skill file should include:
+Create a new `.md` file in `.claude/commands/`. Each skill file should include:
 
 1. A descriptive name in the heading
 2. A `user-invocable: true` front-matter flag if the skill should be callable via `/<skill-name>`
