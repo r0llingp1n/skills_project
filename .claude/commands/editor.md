@@ -23,3 +23,4 @@ This skill is invoked as a subagent by work-issue. It receives an issue descript
    - A summary of changes made
    - A list of files modified
 7. Do NOT push or create a PR — leave that to the caller
+8. When editing, always favor the most idiomatic and human readable solution.
