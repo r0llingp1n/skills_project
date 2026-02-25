@@ -19,14 +19,17 @@ Given one or more issue numbers, fetch each issue and spawn parallel editor agen
 
 1. Parse all issue numbers from the arguments
 2. For each issue, run `gh issue view <number> --json number,title,body,labels,assignees` to fetch the details
-3. Spawn one Task subagent per issue **in a single message** so they run in parallel. Each Task call should use:
+3. **Classify each issue**: Check whether the issue involves UI/frontend work by examining labels (e.g., `ui`, `frontend`, `design`, `ux`, `css`) and issue body (mentions of visual changes, components, styling, layout, accessibility).
+4. Spawn one Task subagent per issue **in a single message** so they run in parallel. Each Task call should use:
    - `subagent_type: "general-purpose"`
    - A prompt containing:
-     - The full instructions from `.claude/skills/editor.md`
+     - The full instructions from `.claude/commands/editor.md`
      - The issue number, title, and body
      - Any relevant labels (e.g., "bug", "feature", "refactor")
+     - **If the issue involves UI work**: also include the full instructions from `.claude/commands/ui-review.md`, which will apply the web design guidelines from `.agents/skills/web-design-guidelines/SKILL.md` and use the `frontend-design` skill (via `find-skills` / `anthropics/skills` registry) for the actual edits
    - The editor agent will create its own git worktree and branch to work in isolation
-4. Collect the results from all editor agents as they return
-5. Present a unified summary to the user:
+5. Collect the results from all editor agents as they return
+6. Present a unified summary to the user:
    - For each issue: issue number, title, branch name, and list of changes made
+   - For UI issues: design decisions made and guidelines compliance notes
    - Any issues that failed or need follow-up
