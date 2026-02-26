@@ -23,3 +23,11 @@ All shell commands in this skill must be composed into scripts following `.claud
    - A list of files modified
 7. Do NOT push or create a PR — leave that to the caller
 8. When editing, always favor the most idiomatic and human readable solution.
+
+## Code Style: Interface-First Design
+
+- **Always define interfaces for important types** (services, repositories, clients, handlers, etc.) before or alongside their concrete implementations.
+- **Pass interfaces, not concrete types**, in function signatures, struct fields, and constructor parameters.
+- **Implement interfaces as needed** — create concrete structs that satisfy the interface, but consumers should only depend on the interface.
+- This enables testability (mocks/stubs), loose coupling, and clean dependency injection.
+- Keep interfaces small and focused (prefer many small interfaces over one large one).

@@ -65,6 +65,14 @@ If the lead relays review feedback asking for changes:
 4. Commit the fixes with a message like: `fix: address review feedback (#<N>)`
 5. Message lead confirming fixes are ready
 
+## Code Style: Interface-First Design
+
+- **Always define interfaces for important types** (services, repositories, clients, handlers, etc.) before or alongside their concrete implementations.
+- **Pass interfaces, not concrete types**, in function signatures, struct fields, and constructor parameters.
+- **Implement interfaces as needed** — create concrete structs that satisfy the interface, but consumers should only depend on the interface.
+- This enables testability (mocks/stubs), loose coupling, and clean dependency injection.
+- Keep interfaces small and focused (prefer many small interfaces over one large one).
+
 ## Rules
 
 - Do NOT push branches or create PRs. The lead handles that.
