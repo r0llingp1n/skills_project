@@ -18,6 +18,8 @@ Scan infrastructure-as-code files and CI/CD config for issues.
 
 ## Instructions
 
+All shell commands in this skill must be composed into scripts following `.claude/commands/batch-scripts.md` — write them to `tmp/scripts/`, validate safety, and run as a single script per block.
+
 1. Detect what infra tooling the project uses by looking for:
    - Terraform/OpenTofu: `*.tf` files
    - Docker: `Dockerfile`, `docker-compose.yml`

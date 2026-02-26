@@ -16,6 +16,8 @@ Audit project documentation for accuracy and completeness.
 
 ## Instructions
 
+All shell commands in this skill must be composed into scripts following `.claude/commands/batch-scripts.md` — write them to `tmp/scripts/`, validate safety, and run as a single script per block.
+
 1. Find all documentation files: `README.md`, `CHANGELOG.md`, `docs/**/*.md`, `API.md`, `CONTRIBUTING.md`
 2. Spawn a Task subagent with `subagent_type: "general-purpose"` to audit. The prompt should instruct it to:
    - Cross-reference documented features/APIs against actual source code

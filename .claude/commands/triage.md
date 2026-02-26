@@ -18,7 +18,9 @@ Scan open issues and present a prioritized summary.
 
 ## Instructions
 
-1. Run `gh issue list --state open --json number,title,labels,assignees,createdAt --limit 50` to fetch open issues
+All shell commands in this skill must be composed into scripts following `.claude/commands/batch-scripts.md` — write them to `tmp/scripts/`, validate safety, and run as a single script per block.
+
+1. Compose a script to run `gh issue list --state open --json number,title,labels,assignees,createdAt --limit 50` to fetch open issues
 2. If a label filter argument was provided (e.g., "bug"), filter results to matching labels
 3. Group issues by label category:
    - **Bugs**: issues with "bug" label — highest priority

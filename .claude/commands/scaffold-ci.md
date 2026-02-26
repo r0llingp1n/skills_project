@@ -17,6 +17,8 @@ Generate or update CI/CD configuration based on the project's stack.
 
 ## Instructions
 
+All shell commands in this skill must be composed into scripts following `.claude/commands/batch-scripts.md` — write them to `tmp/scripts/`, validate safety, and run as a single script per block.
+
 1. Detect the project stack:
    - Language/runtime: look at source files, `package.json`, `requirements.txt`, `go.mod`, `Cargo.toml`, etc.
    - Existing CI: check `.github/workflows/`, `.gitlab-ci.yml`, etc.

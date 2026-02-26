@@ -17,8 +17,10 @@ Given one or more issue numbers, fetch each issue and spawn parallel editor agen
 
 ## Instructions
 
+All shell commands in this skill must be composed into scripts following `.claude/commands/batch-scripts.md` — write them to `tmp/scripts/`, validate safety, and run as a single script per block.
+
 1. Parse all issue numbers from the arguments
-2. For each issue, run `gh issue view <number> --json number,title,body,labels,assignees` to fetch the details
+2. Compose a script to fetch issue details: `gh issue view <number> --json number,title,body,labels,assignees` for each issue
 3. **Classify each issue**: Check whether the issue involves UI/frontend work by examining labels (e.g., `ui`, `frontend`, `design`, `ux`, `css`) and issue body (mentions of visual changes, components, styling, layout, accessibility).
 4. Spawn one Task subagent per issue **in a single message** so they run in parallel. Each Task call should use:
    - `subagent_type: "general-purpose"`
@@ -29,9 +31,9 @@ Given one or more issue numbers, fetch each issue and spawn parallel editor agen
      - **If the issue involves UI work**: also include the full instructions from `.claude/commands/ui-review.md`, which will apply the web design guidelines from `.agents/skills/web-design-guidelines/SKILL.md` and use the `frontend-design` skill (via `find-skills` / `anthropics/skills` registry) for the actual edits
    - The editor agent will create its own git worktree and branch to work in isolation
 5. Collect the results from all editor agents as they return
-6. **Create pull requests**: For each successfully completed issue, push the branch and open a PR:
-   - Run `git push -u origin <branch>` to push the branch
-   - Run `gh pr create` with:
+6. **Create pull requests**: For each successfully completed issue, compose a script per branch to push and open a PR:
+   - `git push -u origin <branch>` to push the branch
+   - `gh pr create` with:
      - A concise title derived from the branch name or issue title
      - A body containing:
        - Summary of changes (use `git diff main...<branch> --stat` and `git log main...<branch> --oneline`)

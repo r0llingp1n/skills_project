@@ -18,7 +18,9 @@ Scan recent changes and update documentation accordingly.
 
 ## Instructions
 
-1. Determine the scope of changes:
+All shell commands in this skill must be composed into scripts following `.claude/commands/batch-scripts.md` — write them to `tmp/scripts/`, validate safety, and run as a single script per block.
+
+1. Compose a script to determine the scope of changes:
    - If a branch is provided, diff against main: `git diff main...<branch> --name-only`
    - If `--since <ref>` is provided, diff from that ref: `git diff <ref>...HEAD --name-only`
    - If no argument, use the last 10 commits: `git diff HEAD~10 --name-only`
