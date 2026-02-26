@@ -18,11 +18,13 @@ Generate or update the CHANGELOG based on recent activity.
 
 ## Instructions
 
+All shell commands in this skill must be composed into scripts following `.claude/commands/batch-scripts.md` — write them to `tmp/scripts/`, validate safety, and run as a single script per block.
+
 1. Determine the range:
    - If a range is given (e.g., `v1.2.0..v1.3.0`), use it
    - If `--unreleased`, use the latest tag to HEAD: find latest tag with `git describe --tags --abbrev=0`, then diff from there
    - If no argument, default to `--unreleased`
-2. Gather changes:
+2. Compose a script to gather changes:
    - `git log <range> --oneline` for commit summaries
    - `gh pr list --state merged --json number,title,labels,mergedAt` filtered to the range
 3. Categorize entries using conventional commit prefixes or PR labels:

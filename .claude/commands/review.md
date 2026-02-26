@@ -17,9 +17,11 @@ Review a PR (by number) or a branch (by name) and provide structured feedback.
 
 ## Instructions
 
+All shell commands in this skill must be composed into scripts following `.claude/commands/batch-scripts.md` — write them to `tmp/scripts/`, validate safety, and run as a single script per block.
+
 1. Determine if the argument is a PR number or branch name
-   - If a number, run `gh pr view <number> --json title,body,headRefName,files` and `gh pr diff <number>`
-   - If a branch name, run `git diff main...<branch>` and `git log main...<branch> --oneline`
+   - If a number, compose a script to run `gh pr view <number> --json title,body,headRefName,files` and `gh pr diff <number>`
+   - If a branch name, compose a script to run `git diff main...<branch>` and `git log main...<branch> --oneline`
 2. Spawn a Task subagent with `subagent_type: "general-purpose"` to perform the review. The prompt should instruct it to:
    - Read every changed file in full (not just the diff) to understand context
    - Check for bugs, logic errors, and edge cases
@@ -30,4 +32,4 @@ Review a PR (by number) or a branch (by name) and provide structured feedback.
    - **Blocking**: issues that must be fixed
    - **Suggestions**: non-blocking improvements
    - **Notes**: observations, questions, or praise
-4. If reviewing a PR, optionally post the review via `gh pr review <number>` with the appropriate flag (`--approve`, `--request-changes`, or `--comment`)
+4. If reviewing a PR, compose a script to post the review via `gh pr review <number>` with the appropriate flag (`--approve`, `--request-changes`, or `--comment`)
