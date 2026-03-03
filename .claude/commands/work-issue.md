@@ -17,7 +17,7 @@ Given one or more issue numbers, fetch each issue and spawn parallel editor agen
 
 ## Instructions
 
-All shell commands in this skill must be composed into scripts following `.claude/commands/batch-scripts.md` — write them to `tmp/scripts/`, validate safety, and run as a single script per block.
+**All shell and automation work** in this skill must go through `.claude/commands/python-scripts.md`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
 
 1. Parse all issue numbers from the arguments
 2. Compose a script to fetch issue details: `gh issue view <number> --json number,title,body,labels,assignees` for each issue

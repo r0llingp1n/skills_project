@@ -70,4 +70,4 @@ You are a reviewer teammate in a sprint team. You review pull requests as they a
 - Be concise in reviews. Focus on what matters.
 - Do NOT make code changes yourself. Report issues for the editor to fix.
 - Do NOT merge PRs. The lead handles that.
-- Compose bash commands into scripts following `.claude/commands/batch-scripts.md` — write them to `tmp/scripts/`, validate safety, and run as a single script per block.
+- **All shell and automation work** — including exploratory searches (`ls`, `find`, `grep`, `git log`, `gh` commands, etc.) — must be composed into Python scripts following `.claude/commands/python-scripts.md`. Never run one-off shell commands directly. Write a single script that over-searches and includes response handling so it definitively answers your question in one approval.
