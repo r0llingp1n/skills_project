@@ -10,8 +10,12 @@ Instead of running bash commands one at a time, compose them into executable she
 
 ## Instructions
 
+**All shell work must go through batch scripts — no exceptions.** This includes exploratory commands like `ls`, `find`, `grep`, `git log`, `gh`, etc. Never run one-off shell commands directly; always compose them into a script first.
+
+When you need to explore or search the codebase, write a single script that over-searches rather than asking permission for each command. Include response handling in the script (e.g., `if [ -d ... ]`, checking `wc -l` output, grepping results) so the script definitively answers your question in one run. It is always better to search more than necessary in one script than to run multiple small commands that each require approval.
+
 1. Create the `tmp/scripts/` directory if it doesn't exist (`mkdir -p tmp/scripts/`)
-2. When you need to run a sequence of bash commands, write them into a single shell script instead of executing them individually:
+2. When you need to run **any** bash commands — whether a single search or a multi-step operation — write them into a shell script instead of executing them individually:
    - Name scripts descriptively: `tmp/scripts/<step>-<description>.sh` (e.g., `tmp/scripts/01-setup-deps.sh`)
    - Start every script with `#!/usr/bin/env bash` and `set -euo pipefail`
    - Add brief comments explaining each block of commands
