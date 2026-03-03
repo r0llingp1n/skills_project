@@ -16,7 +16,7 @@ Remove git worktrees whose branches have been merged into main.
 
 ## Instructions
 
-**All shell and automation work** in this skill must go through `.claude/commands/python-scripts.md`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
+**All shell and automation work** in this skill must go through `.claude/commands/python-scripts.md`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
 
 1. Compose a script that:
    - Runs `git worktree list` to get all worktrees

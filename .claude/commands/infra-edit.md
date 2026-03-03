@@ -10,10 +10,10 @@ Like the editor skill, but specialized for infrastructure changes. Works in an i
 
 ## Instructions
 
-**All shell and automation work** in this skill must go through `.claude/commands/python-scripts.md`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
+**All shell and automation work** in this skill must go through `.claude/commands/python-scripts.md`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
 
 1. Derive a branch name from the task description (e.g., `infra-add-staging-env`, `infra-fix-ci-caching`)
-2. Compose a script to create the branch and worktree: `git worktree add ../<branch-name> -b <branch-name>`
+2. Compose a script to create the branch and worktree: `git worktree add /tmp/<branch-name> -b <branch-name>`
 3. Do all work inside the new worktree directory
 4. For the given infrastructure task:
    - Make the requested changes to config files

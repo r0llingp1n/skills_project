@@ -10,11 +10,11 @@ This skill is invoked as a subagent by work-issue. It receives an issue descript
 
 ## Instructions
 
-**All shell and automation work** in this skill must go through `.claude/commands/python-scripts.md`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
+**All shell and automation work** in this skill must go through `.claude/commands/python-scripts.md`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
 
 1. Derive a branch name from the issue title (e.g., `issue-42-add-login-page`), keeping it short and kebab-cased
-2. Compose a script to create the branch and worktree: `git worktree add ../<branch-name> -b <branch-name>`
-3. Do all work inside the new worktree directory (`../<branch-name>/`)
+2. Compose a script to create the branch and worktree: `git worktree add /tmp/<branch-name> -b <branch-name>`
+3. Do all work inside the new worktree directory (`/tmp/<branch-name>/`)
 4. Implement the changes described in the issue prompt
 5. Compose a script to stage and commit your changes with a message referencing the issue number (e.g., `fix: resolve login bug (#42)`)
 6. When finished, report back with:

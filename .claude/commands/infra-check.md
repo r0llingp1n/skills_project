@@ -18,7 +18,7 @@ Scan infrastructure-as-code files and CI/CD config for issues.
 
 ## Instructions
 
-**All shell and automation work** in this skill must go through `.claude/commands/python-scripts.md`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
+**All shell and automation work** in this skill must go through `.claude/commands/python-scripts.md`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
 
 1. Detect what infra tooling the project uses by looking for:
    - Terraform/OpenTofu: `*.tf` files

@@ -16,9 +16,9 @@ Run tests against a branch (typically one created by an editor agent) and report
 
 ## Instructions
 
-**All shell and automation work** in this skill must go through `.claude/commands/python-scripts.md`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
+**All shell and automation work** in this skill must go through `.claude/commands/python-scripts.md`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
 
-1. Compose a script to locate the worktree via `git worktree list`, and if none exists, create one with `git worktree add ../<branch> <branch>`
+1. Compose a script to locate the worktree via `git worktree list`, and if none exists, create one with `git worktree add /tmp/<branch> <branch>`
 2. Spawn a Task subagent with `subagent_type: "general-purpose"` to run tests in the worktree directory. The prompt should instruct it to:
    - Detect the project's test runner (look for `package.json`, `pytest.ini`, `Makefile`, `Cargo.toml`, etc.)
    - Run the full test suite

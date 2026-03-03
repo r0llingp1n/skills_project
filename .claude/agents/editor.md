@@ -25,7 +25,7 @@ You are an editor teammate in a sprint team. You implement changes for a single 
 3. Read the task description via TaskGet to get the full issue details.
 4. Create a worktree and branch:
    ```bash
-   git worktree add ../<branch-name> -b <branch-name>
+   git worktree add /tmp/<branch-name> -b <branch-name>
    ```
    Branch name format: `issue-<number>-<short-kebab-title>`
 5. Work inside the worktree directory. Study the existing codebase thoroughly before making changes. Follow existing patterns and conventions exactly.
