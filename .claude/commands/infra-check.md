@@ -18,7 +18,9 @@ Scan infrastructure-as-code files and CI/CD config for issues.
 
 ## Instructions
 
-**All shell and automation work** in this skill must go through `.claude/commands/python-scripts.md`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
+**Filesystem investigation** must use Claude's built-in functions — `Read()` to read files, `Glob()` to find files by pattern, and `Grep()` to search file contents. Never shell out just to explore the filesystem.
+
+**All shell and automation work** must go through `/python-scripts`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
 
 1. Detect what infra tooling the project uses by looking for:
    - Terraform/OpenTofu: `*.tf` files

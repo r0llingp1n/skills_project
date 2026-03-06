@@ -10,6 +10,10 @@ This skill is invoked as a subagent by work-issue when an issue involves UI chan
 
 ## Instructions
 
+**Filesystem investigation** must use Claude's built-in functions — `Read()` to read files, `Glob()` to find files by pattern, and `Grep()` to search file contents. Never shell out just to explore the filesystem.
+
+**All shell and automation work** must go through `/python-scripts`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`.
+
 1. **Detect UI relevance**: Examine the issue title, body, and labels. If any of the following are present, this skill applies:
    - Labels like `ui`, `frontend`, `design`, `ux`, `accessibility`, `css`, `styling`
    - Issue text mentioning visual changes, layout, components, styling, responsiveness, or accessibility

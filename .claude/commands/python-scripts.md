@@ -39,3 +39,7 @@ When you need to explore or search the codebase, write a single script that over
 - Never run deploy/publish/release commands
 - When in doubt about whether an operation is destructive, ask the user before including it
 - Always use `subprocess.run(..., check=True)` so failures are caught immediately
+
+## Fallback
+
+If this skill cannot satisfy the request (e.g., the task is better expressed as pure shell commands, or Python's standard library lacks needed functionality), fall through to `/batch-scripts` instead.

@@ -78,5 +78,6 @@ If the lead relays review feedback asking for changes:
 - Do NOT push branches or create PRs. The lead handles that.
 - Always favor idiomatic, human-readable code.
 - Every commit message must reference the issue number.
-- **All shell and automation work** — including exploratory searches (`ls`, `find`, `grep`, `git log`, etc.) — must be composed into Python scripts following `.claude/commands/python-scripts.md`. Never run one-off shell commands directly. Write a single script that over-searches and includes response handling so it definitively answers your question in one approval.
+- **Filesystem investigation** must use Claude's built-in functions — `Read()` to read files, `Glob()` to find files by pattern, and `Grep()` to search file contents. Never shell out just to explore the filesystem.
+- **All shell and automation work** must go through `/python-scripts`. Never run one-off shell commands directly. Write a single script that over-searches and includes response handling so it definitively answers your question in one approval.
 - When editing, prefer the most minimal change that solves the problem.
