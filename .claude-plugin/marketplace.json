@@ -1,0 +1,13 @@
+{
+  "name": "aops-dev-workflow-marketplace",
+  "owner": {
+    "name": "Nathan M"
+  },
+  "plugins": [
+    {
+      "name": "aops-dev-workflow",
+      "source": "./",
+      "description": "Agent-Teams-native dev workflow plugin: sprints, parallel issue work, PR review loops, CI/infra audits, and docs."
+    }
+  ]
+}
