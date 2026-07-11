@@ -42,7 +42,29 @@ Given one or more issue numbers, fetch each issue and spawn parallel editor agen
        - Summary of changes (use `git diff main...<branch> --stat` and `git log main...<branch> --oneline`)
        - `Closes #<number>` to link the issue
    - These can be done in parallel across branches
-8. Present a unified summary to the user:
-   - For each issue: issue number, title, branch name, list of changes made, and **PR URL**
+8. **Review each PR**: For each created PR, spawn a Task subagent per PR **in parallel** with `subagent_type: "general-purpose"`. Each subagent's prompt should include:
+   - The full instructions from `${CLAUDE_PLUGIN_ROOT}/skills/review/SKILL.md`
+   - The PR number
+   - An instruction to return structured findings (Blocking / Suggestions / Notes) but **not** to post a GH review or approve/request-changes — just return the findings
+9. **Fix review issues**: For each PR that has **Blocking** findings, spawn a Task subagent per PR **in parallel** with `subagent_type: "general-purpose"`. Each subagent's prompt should include:
+   - The full instructions from `${CLAUDE_PLUGIN_ROOT}/skills/editor/SKILL.md` (but skip the branch/worktree creation — the worktree at `/tmp/<branch-name>/` already exists)
+   - The list of Blocking findings to fix
+   - An instruction to work in the existing worktree (`/tmp/<branch-name>/`), commit the fixes, and push the updated branch
+   - After all fix subagents complete, loop back to step 8 to re-review. Repeat until no Blocking findings remain (max 3 iterations to avoid infinite loops).
+10. **Post review approval**: Once a PR has no Blocking findings, compose a script to post an approving review via `gh pr review <number> --approve --body "Automated review: all clear"`
+11. **Recommend follow-up work**: Collect all **Suggestions** and **Notes** from the final review pass across all PRs. Present them to the user as recommended additional work, grouped by theme (e.g., test coverage, refactoring, documentation, performance). For each recommendation, include:
+   - A clear description of the work
+   - Which files/areas are affected
+   - Why it's worth doing
+   - Ask the user which (if any) recommendations they'd like to pursue.
+12. **Create follow-up issues**: For each recommendation the user approves, compose a script to create a new GitHub issue via `gh issue create` with:
+   - A descriptive title
+   - A body containing the recommendation details, affected files, and a reference to the original issue/PR (e.g., "Follow-up from #42")
+   - Appropriate labels if applicable
+   - Then immediately apply `/work-issue` to the newly created issue numbers to begin working on them.
+13. **Merge**: Present the user with the list of approved PRs (from the original work and any follow-up work) and ask for confirmation before merging. Only merge PRs the user explicitly approves. Compose a script to merge approved PRs via `gh pr merge <number> --squash --delete-branch`.
+14. Present a unified summary to the user:
+   - For each issue: issue number, title, branch name, list of changes made, **PR URL**, review iterations needed
    - For UI issues: design decisions made and guidelines compliance notes
+   - Follow-up issues created and their status
    - Any issues that failed or need follow-up
