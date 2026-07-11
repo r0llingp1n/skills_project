@@ -35,4 +35,5 @@ Scan infrastructure-as-code files and CI/CD config for issues.
    - Flag reliability issues (no health checks, missing restart policies, no resource constraints)
    - Flag drift risks (hardcoded values that should be variables, environment-specific config in shared files)
    - Check CI/CD for missing steps (no linting, no tests, no caching, no pinned action versions)
-4. Present findings grouped by severity: **Critical**, **Warning**, **Info**
+4. **Bump the Helm chart version**: If any Helm charts exist (`**/Chart.yaml`), read each `Chart.yaml` and increment the `version` field (patch semver bump, e.g., `0.2.1` → `0.2.2`). Do **not** modify `appVersion` — only the chart `version`. This must happen on every run where changes are made, so consumers always get a new chart release.
+5. Present findings grouped by severity: **Critical**, **Warning**, **Info**
