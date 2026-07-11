@@ -28,10 +28,10 @@ Given one or more issue numbers, fetch each issue and spawn parallel editor agen
 5. Spawn one Task subagent per issue **in a single message** so they run in parallel. Each Task call should use:
    - `subagent_type: "general-purpose"`
    - A prompt containing:
-     - The full instructions from `.claude/commands/editor.md`
+     - The full instructions from `${CLAUDE_PLUGIN_ROOT}/skills/editor/SKILL.md`
      - The issue number, title, and body
      - Any relevant labels (e.g., "bug", "feature", "refactor")
-     - **If the issue involves UI work**: also include the full instructions from `.claude/commands/ui-review.md`, which will apply the web design guidelines from `.agents/skills/web-design-guidelines/SKILL.md` and use the `frontend-design` skill (via `find-skills` / `anthropics/skills` registry) for the actual edits
+     - **If the issue involves UI work**: also include the full instructions from `${CLAUDE_PLUGIN_ROOT}/skills/ui-review/SKILL.md`, which will apply the web design guidelines from `.agents/skills/web-design-guidelines/SKILL.md` and use the `frontend-design` skill (via `find-skills` / `anthropics/skills` registry) for the actual edits
    - The editor agent will create its own git worktree and branch to work in isolation
 6. Collect the results from all editor agents as they return
 7. **Create pull requests**: For each successfully completed issue, compose a script per branch to push and open a PR:

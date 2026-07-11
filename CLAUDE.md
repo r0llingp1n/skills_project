@@ -1,15 +1,41 @@
-# Skills Project
+# AutonomousOps Dev Workflow Plugin
 
-This project contains Claude Code skills — reusable prompt templates that extend Claude's capabilities.
+This repository is a **Claude Code plugin** (`aops-dev-workflow`) that bundles skills and Agent-Teams teammates for an end-to-end dev workflow: parallel issue work, coordinated sprints, PR review/fix/merge loops, CI/infra audits, changelogs, and docs.
 
 ## Structure
 
-- `.claude/commands/` — Skill definition files (Markdown)
+- `.claude-plugin/plugin.json` — plugin manifest (name, version, metadata)
+- `.claude-plugin/marketplace.json` — single-plugin marketplace for local install/testing
+- `skills/<name>/SKILL.md` — skills (each in its own directory); `user-invocable: true` ones show up as `/<name>`
+- `agents/<name>.md` — Agent-Teams teammates (`editor`, `reviewer`) that coordinate via `TaskList`/`TaskUpdate`/`SendMessage`
 
-## Adding a Skill
+Not part of the distributed plugin (author-local config): `.claude/settings*.json`, `.claude/scripts/`, `.claude/worktrees/`, and the vendored `.agents/skills/` (tracked by `skills-lock.json`).
 
-Create a new `.md` file in `.claude/commands/`. Each skill file should include:
+## Agent Teams
 
-1. A descriptive name in the heading
-2. A `user-invocable: true` front-matter flag if the skill should be callable via `/<skill-name>`
-3. Clear instructions for Claude to follow when the skill is invoked
+The `sprint`/`work-issue` flows are designed to run with Agent Teams enabled
+(`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`). The lead spawns `aops-dev-workflow:editor`
+and `aops-dev-workflow:reviewer` teammates, which self-coordinate through the shared
+task list and direct messaging.
+
+## Installing / testing locally
+
+```
+claude --plugin-dir .
+# or
+/plugin marketplace add ./
+/plugin install aops-dev-workflow@aops-dev-workflow-marketplace
+```
+
+Run `/reload-plugins` to pick up edits without restarting.
+
+## Adding a skill
+
+Create `skills/<name>/SKILL.md` with front matter:
+
+1. `name` — the skill/command name (matches the directory)
+2. `description` — what it does; Claude uses this to auto-invoke and to label the `/<name>` command
+3. Optional: `user-invocable: false` to hide from the `/` menu, plus `argument-hint`, `allowed-tools`
+4. The body: instructions Claude follows when the skill runs
+
+Reference another skill's file from within a skill as `${CLAUDE_PLUGIN_ROOT}/skills/<name>/SKILL.md`, and spawn a teammate agent as `subagent_type: "aops-dev-workflow:<name>"`.

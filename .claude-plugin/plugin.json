@@ -1,0 +1,19 @@
+{
+  "name": "aops-dev-workflow",
+  "displayName": "AutonomousOps Dev Workflow",
+  "version": "0.1.0",
+  "description": "Agent-Teams-native dev workflow: parallel issue work, sprints with editor/reviewer teammates, PR review-and-merge loops, CI/infra audits, changelogs, and docs — plus batch/python script runners for single-approval automation.",
+  "author": {
+    "name": "Nathan M"
+  },
+  "keywords": [
+    "git",
+    "github",
+    "agent-teams",
+    "ci-cd",
+    "infrastructure",
+    "code-review",
+    "workflow"
+  ],
+  "license": "MIT"
+}

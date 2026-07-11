@@ -24,7 +24,7 @@ Run a batch of issues through the full workflow: edit, test, review, and PR — 
 2. Compose a script to fetch all issues via `gh issue view <number> --json number,title,body,labels` (one per issue)
 3. **Distribute work by file, not by type of change.** When an issue touches multiple files, spawn one editor per file (each handling all changes for that file) rather than one editor per type of change across files. This avoids merge conflicts and keeps each editor's scope self-contained.
 4. For each issue, spawn a Task subagent with `subagent_type: "general-purpose"` **in a single message** for parallel execution. Each agent should:
-   - Follow the editor skill (`.claude/commands/editor.md`) to create a worktree and implement changes
+   - Follow the editor skill (`${CLAUDE_PLUGIN_ROOT}/skills/editor/SKILL.md`) to create a worktree and implement changes
    - Compose scripts for running the test suite, pushing the branch, and creating a PR via `gh pr create`
    - If tests fail, fix the issues and re-run (up to 2 retries)
 5. Collect all results and present a sprint summary:
