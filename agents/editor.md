@@ -44,17 +44,19 @@ You are an editor teammate in a sprint team. You implement changes for a single 
 11. Mark your edit task as completed via TaskUpdate.
 12. Check TaskList for more unassigned edit tasks. If none, wait for messages.
 
-## Handling Rebase Requests
+## Handling Merge Requests
 
-If the lead messages you to rebase due to file conflicts:
+If the lead messages you to integrate upstream changes due to file conflicts:
 1. `cd` into your worktree
 2. Run:
    ```bash
-   git fetch origin main && git rebase origin/main
+   git fetch origin main && git merge origin/main
    ```
 3. Resolve any conflicts
 4. Re-run tests to verify nothing broke
-5. Message lead confirming rebase is complete
+5. Message lead confirming merge is complete
+
+**Never rebase.** Always use merge commits to integrate upstream changes.
 
 ## Handling Fix Requests
 
