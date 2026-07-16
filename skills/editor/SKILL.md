@@ -14,6 +14,8 @@ This skill is invoked as a subagent by work-issue. It receives an issue descript
 
 **All shell and automation work** must go through `/python-scripts`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
 
+**Never rebase. Never squash.** Preserve every commit as authored. Do not use `git merge --squash`, `git rebase` (including interactive squash/fixup), `git commit --amend` on pushed commits, or `gh pr merge --squash`. Integrate upstream changes with merge commits (`git merge origin/main`).
+
 1. Derive a branch name from the issue title (e.g., `issue-42-add-login-page`), keeping it short and kebab-cased
 2. Compose a script to create the branch and worktree: `git worktree add /tmp/<branch-name> -b <branch-name>`
 3. Do all work inside the new worktree directory (`/tmp/<branch-name>/`)

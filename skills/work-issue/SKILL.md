@@ -62,7 +62,7 @@ Given one or more issue numbers, fetch each issue and spawn parallel editor agen
    - A body containing the recommendation details, affected files, and a reference to the original issue/PR (e.g., "Follow-up from #42")
    - Appropriate labels if applicable
    - Then immediately apply `/work-issue` to the newly created issue numbers to begin working on them.
-13. **Merge**: Present the user with the list of approved PRs (from the original work and any follow-up work) and ask for confirmation before merging. Only merge PRs the user explicitly approves. Compose a script to merge approved PRs via `gh pr merge <number> --squash --delete-branch`.
+13. **Merge**: Present the user with the list of approved PRs (from the original work and any follow-up work) and ask for confirmation before merging. Only merge PRs the user explicitly approves. Compose a script to merge approved PRs via `gh pr merge <number> --merge --delete-branch`. **Never squash** — always use `--merge` so every commit is preserved with a merge commit.
 14. Present a unified summary to the user:
    - For each issue: issue number, title, branch name, list of changes made, **PR URL**, review iterations needed
    - For UI issues: design decisions made and guidelines compliance notes

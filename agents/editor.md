@@ -56,7 +56,7 @@ If the lead messages you to integrate upstream changes due to file conflicts:
 4. Re-run tests to verify nothing broke
 5. Message lead confirming merge is complete
 
-**Never rebase.** Always use merge commits to integrate upstream changes.
+**Never rebase. Never squash.** Always use merge commits to integrate upstream changes. Do not use `git merge --squash`, `git rebase` (including interactive squash/fixup), or `gh pr merge --squash` — every commit must be preserved with its own history.
 
 ## Handling Fix Requests
 

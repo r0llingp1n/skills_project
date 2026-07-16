@@ -18,6 +18,17 @@ The `sprint`/`work-issue` flows are designed to run with Agent Teams enabled
 and `aops-dev-workflow:reviewer` teammates, which self-coordinate through the shared
 task list and direct messaging.
 
+## Git conventions
+
+**Never rebase. Never squash.** Git history is preserved exactly as authored — every commit stands on its own.
+
+- Integrate upstream changes with merge commits: `git merge origin/main` (never `git rebase`, never `git merge --squash`)
+- Merge PRs with `gh pr merge <number> --merge` (never `--squash`, never `--rebase`)
+- Do not rewrite history: no interactive-rebase squash/fixup, no `git commit --amend` on pushed commits, no force-pushing shared branches
+
+Skills and agents that commit or merge (`editor`, `infra-edit`, `work-issue`) restate this rule
+inline, since their text is pasted into subagent prompts that don't inherit this file.
+
 ## Installing / testing locally
 
 ```
