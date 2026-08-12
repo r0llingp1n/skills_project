@@ -4,16 +4,17 @@ A [Claude Code](https://code.claude.com) plugin for an end-to-end development wo
 
 ## Install
 
+In a Claude Code session, add the marketplace straight from GitHub, then install the plugin:
+
 ```bash
-# Add this repo as a marketplace, then install the plugin
-/plugin marketplace add ./
+/plugin marketplace add r0llingp1n/skills_project
 /plugin install aops-dev-workflow@aops-dev-workflow-marketplace
 ```
 
-Or load it directly for development:
+Later, pull the newest release with:
 
 ```bash
-claude --plugin-dir .
+/plugin marketplace update aops-dev-workflow-marketplace
 ```
 
 The sprint/review flows expect Agent Teams to be enabled (still required, still experimental):

@@ -29,13 +29,19 @@ task list and direct messaging. There is no manual team setup: teammates are spa
 Skills and agents that commit or merge (`editor`, `infra-edit`, `work-issue`) restate this rule
 inline, since their text is pasted into subagent prompts that don't inherit this file.
 
-## Installing / testing locally
+## Installing
+
+Install from GitHub — the canonical source:
+
+```
+/plugin marketplace add r0llingp1n/skills_project
+/plugin install aops-dev-workflow@aops-dev-workflow-marketplace
+```
+
+When developing this plugin against un-pushed edits, load the working copy directly instead:
 
 ```
 claude --plugin-dir .
-# or
-/plugin marketplace add ./
-/plugin install aops-dev-workflow@aops-dev-workflow-marketplace
 ```
 
 Run `/reload-plugins` to pick up edits without restarting.
