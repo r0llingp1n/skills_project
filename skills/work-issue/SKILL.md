@@ -21,6 +21,8 @@ Given one or more issue numbers, fetch each issue and spawn parallel editor agen
 
 **All shell and automation work** must go through `/python-scripts`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
 
+**This flow intentionally uses plain Task subagents** (`subagent_type: "general-purpose"`), not Agent Teams teammates, for its single-issue review→fix→merge loop. Team-based parallel orchestration with the `aops-dev-workflow:editor`/`aops-dev-workflow:reviewer` teammates lives in `/sprint`.
+
 1. Parse all issue numbers from the arguments
 2. Compose a script to fetch issue details: `gh issue view <number> --json number,title,body,labels,assignees` for each issue
 3. **Classify each issue**: Check whether the issue involves UI/frontend work by examining labels (e.g., `ui`, `frontend`, `design`, `ux`, `css`) and issue body (mentions of visual changes, components, styling, layout, accessibility).
