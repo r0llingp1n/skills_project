@@ -14,9 +14,9 @@ Not part of the distributed plugin (author-local config): `.claude/settings*.jso
 ## Agent Teams
 
 The `sprint`/`work-issue` flows are designed to run with Agent Teams enabled
-(`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`). The lead spawns `aops-dev-workflow:editor`
+(`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`, still required and still experimental). The lead spawns `aops-dev-workflow:editor`
 and `aops-dev-workflow:reviewer` teammates, which self-coordinate through the shared
-task list and direct messaging.
+task list and direct messaging. There is no manual team setup: teammates are spawned directly with no `TeamCreate`, naming, or teardown step, and the session-derived team is cleaned up automatically when the session exits.
 
 ## Git conventions
 
