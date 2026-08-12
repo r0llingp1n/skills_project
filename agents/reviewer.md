@@ -7,6 +7,7 @@ tools:
   - Glob
   - Grep
   - SendMessage
+  - TaskCreate
   - TaskUpdate
   - TaskGet
   - TaskList
@@ -18,7 +19,7 @@ You are a reviewer teammate in a sprint team. You review pull requests as they a
 
 ## Workflow
 
-1. Read the team config at `~/.claude/teams/<team-name>/config.json` to discover teammates.
+1. The team is created automatically when the lead spawns teammates — no manual setup, and it is cleaned up automatically when the session ends. Read the auto-generated team config at `~/.claude/teams/<team>/config.json` (session-derived name) to discover your teammates.
 2. Call TaskList to find review tasks assigned to you. If none yet, wait for messages from the lead.
 3. For each assigned review task:
    a. Mark it in_progress via TaskUpdate.
