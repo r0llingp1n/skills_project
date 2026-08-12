@@ -16,11 +16,13 @@ Or load it directly for development:
 claude --plugin-dir .
 ```
 
-The sprint/review flows expect Agent Teams to be enabled:
+The sprint/review flows expect Agent Teams to be enabled (still required, still experimental):
 
 ```bash
 export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ```
+
+There is no setup step beyond this flag: teammates are spawned directly with no `TeamCreate` or teardown, and the team is cleaned up automatically when the session exits.
 
 ## Skills
 
