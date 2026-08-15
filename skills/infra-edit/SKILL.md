@@ -10,9 +10,7 @@ Like the editor skill, but specialized for infrastructure changes. Works in an i
 
 ## Instructions
 
-**Filesystem investigation** must use Claude's built-in functions — `Read()` to read files, `Glob()` to find files by pattern, and `Grep()` to search file contents. Never shell out just to explore the filesystem.
-
-**All shell and automation work** must go through `/python-scripts`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
+Read and follow `${CLAUDE_PLUGIN_ROOT}/skills/_shared/conventions.md`.
 
 **Never rebase. Never squash.** Preserve every commit as authored. Do not use `git merge --squash`, `git rebase` (including interactive squash/fixup), `git commit --amend` on pushed commits, or `gh pr merge --squash`. Integrate upstream changes with merge commits (`git merge origin/main`).
 
@@ -23,5 +21,10 @@ Like the editor skill, but specialized for infrastructure changes. Works in an i
    - Make the requested changes to config files
    - Compose a script to validate syntax where possible (`terraform fmt`, `docker compose config`, `actionlint`, etc.)
    - Ensure no secrets are hardcoded — use variables, env refs, or secret manager references
-5. Compose a script to stage and commit with a descriptive message (e.g., `infra: add health checks to docker-compose (#18)`)
-6. Report back with: branch name, files modified, validation results
+5. **Bump affected Helm charts.** If this change touched files under a chart
+   directory, read that chart's `Chart.yaml` and increment its `version` by a patch
+   semver step (`0.2.1` → `0.2.2`) so consumers receive a new release. Do **not**
+   modify `appVersion`. Bump only charts this change actually touched — not every
+   chart in the repo.
+6. Compose a script to stage and commit with a descriptive message (e.g., `infra: add health checks to docker-compose (#18)`)
+7. Report back with: branch name, files modified, charts bumped, validation results

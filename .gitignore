@@ -1,1 +1,5 @@
 settings.local.json
+.claude/settings.json
+.claude/scripts/
+.claude/worktrees/
+.claude/sprints/

@@ -4,7 +4,9 @@
     "web-design-guidelines": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
-      "computedHash": "a6a44d5498f7e8f68289902f3dedfc6f38ae0cee1e96527c80724cf27f727c2a"
+      "computedHash": "a6a44d5498f7e8f68289902f3dedfc6f38ae0cee1e96527c80724cf27f727c2a",
+      "vendoredTo": "skills/ui-review/reference/web-design-guidelines.md",
+      "note": "Bundled into the plugin so installed users get it. Previously lived in .agents/skills/, which is not distributed - ui-review read a path that only existed on the author's machine."
     }
   }
 }

@@ -1,66 +1,143 @@
 # aops-dev-workflow
 
-A [Claude Code](https://code.claude.com) plugin for an end-to-end development workflow, built around **Agent Teams**: triage and work issues in parallel, run coordinated sprints with `editor`/`reviewer` teammates, loop PRs through review → fix → merge, audit CI/infra, and keep changelogs and docs current. Shell/Python work is funneled through single-approval script runners.
+A [Claude Code](https://code.claude.com) plugin for an end-to-end development
+workflow built around **Agent Teams**.
+
+Plan an objective into tickets, work those tickets as **parallel lanes that cannot
+conflict**, review every lane through a **three-lens panel** (security, performance,
+simplicity), let the lane's editor resolve findings over up to five cycles, and
+integrate green lanes locally into a sprint branch. Nothing reaches the remote until
+**you** run `/submit-pr`.
+
+## The pipeline
+
+```
+/plan "objective"   →  tickets with rationale + predicted files
+/sprint 42 43 44    →  lanes → worktrees → 3-lens review → fix ≤5 → local merge
+/submit-pr          →  push + PR with WHAT / WHY / TESTING     ← only you run this
+```
 
 ## Install
-
-In a Claude Code session, add the marketplace straight from GitHub, then install the plugin:
 
 ```bash
 /plugin marketplace add r0llingp1n/skills_project
 /plugin install aops-dev-workflow@aops-dev-workflow-marketplace
 ```
 
-Later, pull the newest release with:
+Pull the newest release later with:
 
 ```bash
 /plugin marketplace update aops-dev-workflow-marketplace
 ```
 
-The sprint/review flows expect Agent Teams to be enabled (still required, still experimental):
+Sprints need Agent Teams (still experimental, still required):
 
 ```bash
 export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ```
 
-There is no setup step beyond this flag: teammates are spawned directly with no `TeamCreate` or teardown, and the team is cleaned up automatically when the session exits.
+There is no team setup step — teammates are spawned directly and cleaned up when the
+session exits.
 
-## Skills
+**Restart Claude Code after installing.** The plugin ships a `PreToolUse` hook, and
+hooks load at session start.
+
+## How a sprint runs
+
+1. **Lanes.** `/sprint` reads each ticket's `## Predicted files` block and groups
+   tickets by file overlap using union-find — any two tickets sharing a file land in
+   the same lane, transitively. Lanes cannot conflict with each other by construction.
+2. **Worktrees.** Each lane gets `sprint-<n>/lane-<k>` in `/tmp/sprint-<n>-lane-<k>`.
+   The **lead** allocates every branch name; editors never derive their own.
+3. **Panel review.** Three reviewers examine each lane in parallel, one per lens.
+   Findings are consolidated and deduped before reaching the editor.
+4. **Fix loop.** The lane's editor owns a counter and runs up to **5** cycles,
+   receiving the cumulative findings history each round. It exits green, or
+   `UNFINISHED` with everything still outstanding.
+5. **Merge on green.** A lane merges into the sprint branch the moment it passes,
+   while its editor is still alive to resolve conflicts.
+6. **Stop.** The sprint reports and halts. No push, no PR.
+
+## Nothing runs indefinitely
+
+Every loop has a counter, a cap, and a named terminal state — see
+[`skills/_shared/limits.md`](skills/_shared/limits.md).
+
+| Loop | Cap | Terminal state |
+| --- | --- | --- |
+| Review → fix, per lane | 5 | `UNFINISHED` |
+| Test/build retries | 2 | `TESTS FAILING` |
+| Integration conflicts | 2 | `BLOCKED` |
+| Teammate idle polls | 3 | `IDLE` |
+| Concurrent lanes | 4 | surplus queues |
+| `/plan` items | 12 | stop and ask |
+| Follow-up recursion | depth 1 | create only, never auto-work |
+
+## The remote gate
+
+`git push`, `gh pr create`, and `gh pr merge` are denied by
+[`hooks/gate-remote.sh`](hooks/gate-remote.sh) unless `/submit-pr` has recorded your
+confirmation for the current session. Skills and agents state the rule; the hook
+enforces it.
+
+This stops drift, not a determined adversary — an agent with `Bash` could write the
+approval marker itself. Drift is the failure mode that actually occurs.
+
+## Commands
 
 | Command | What it does |
 | --- | --- |
-| `/triage` | List and prioritize open issues for the current repo |
-| `/work-issue <n...>` | Fetch issues, implement in parallel, then review → fix → merge |
-| `/sprint <n...>` | Run issues as a coordinated team sprint (editor + reviewer teammates) |
-| `/review [pr-or-branch]` | Review a PR or branch for correctness and style |
+| `/plan <objective>` | Decompose into work items, show lanes, publish approved items as tickets |
+| `/sprint <n...>` | Run tickets as parallel lanes with panel review and local integration |
+| `/submit-pr [n]` | **You only.** Push the sprint branch, open a PR with WHAT/WHY/TESTING |
+| `/triage` | List and prioritize open issues |
+| `/review [pr-or-branch]` | Ad-hoc review of a single PR or branch |
 | `/changelog` | Generate or update CHANGELOG from merged PRs and commits |
 | `/ci-status [branch-or-pr]` | Check CI/CD pipeline status |
 | `/scaffold-ci` | Generate or update CI/CD pipeline config |
 | `/test-branch [branch]` | Run the test suite against a branch in its worktree |
 | `/cleanup-worktrees` | Remove worktrees for merged branches |
-| `/infra-check [category]` | Audit infra config for drift, security, best practices |
+| `/infra-check [category]` | Audit infra config — read-only |
 | `/doc-review` | Check docs for staleness, broken references, and gaps |
-| `/update-docs` | Update project documentation to reflect recent changes |
-| `/batch-scripts` | Compose bash into a single script for one-approval execution |
-| `/python-scripts` | Compose automation into small Python scripts for one-approval execution |
-| `/example` | Demonstrates the skill file format |
+| `/update-docs` | Update documentation to reflect recent changes |
+| `/batch-scripts` | Compose bash into one script for single-approval execution |
+| `/python-scripts` | Compose automation into Python scripts for single-approval execution |
 
-Non-invocable helper skills (`editor`, `infra-edit`, `ui-review`) are inlined into other skills' subagent prompts.
+Non-invocable helpers (`infra-edit`, `ui-review`, `example`) are inlined into other
+skills' subagent prompts.
 
-## Agents (Agent Teams teammates)
+## Agents
 
-- **`aops-dev-workflow:editor`** — implements one issue in an isolated worktree, coordinates via the shared task list and messaging
-- **`aops-dev-workflow:reviewer`** — reviews PRs as they're created during a sprint and reports verdicts to the lead
+- **`aops-dev-workflow:editor`** — owns one lane, implements it in its assigned
+  worktree, and resolves review findings over up to 5 cycles
+- **`aops-dev-workflow:reviewer`** — examines a lane through one assigned lens;
+  three are spawned per sprint
 
 ## Layout
 
 ```
 .claude-plugin/
-  plugin.json          # manifest
-  marketplace.json     # local marketplace entry
+  plugin.json            # manifest
+  marketplace.json       # marketplace entry
 skills/
-  <name>/SKILL.md      # one directory per skill
+  _shared/               # limits, conventions, ticket format, ledger schema
+  <name>/SKILL.md        # one directory per skill
 agents/
   editor.md
   reviewer.md
+hooks/
+  hooks.json             # PreToolUse gate registration
+  gate-remote.sh         # the gate itself
 ```
+
+## Upgrading from 0.1.x
+
+`/work-issue` is **removed** — `/sprint` subsumes it. The two shared thirteen of
+fourteen stages and had drifted apart.
+
+Sprints no longer push or open PRs. Run `/submit-pr` when you want that.
+
+Tickets now need a `## Predicted files` block to be laned automatically; see
+[`skills/_shared/ticket-format.md`](skills/_shared/ticket-format.md). `/plan` writes
+it for you. `/sprint` will ask what to do with tickets that lack one rather than
+guessing.

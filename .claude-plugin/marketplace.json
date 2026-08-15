@@ -7,7 +7,7 @@
     {
       "name": "aops-dev-workflow",
       "source": "./",
-      "description": "Agent-Teams-native dev workflow plugin: sprints, parallel issue work, PR review loops, CI/infra audits, and docs."
+      "description": "Agent-Teams-native dev workflow: plan to tickets, work them as conflict-free lanes with a three-lens review panel, integrate locally, and submit the PR on your command."
     }
   ]
 }
