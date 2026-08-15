@@ -18,9 +18,7 @@ Generate or update the CHANGELOG based on recent activity.
 
 ## Instructions
 
-**Filesystem investigation** must use Claude's built-in functions — `Read()` to read files, `Glob()` to find files by pattern, and `Grep()` to search file contents. Never shell out just to explore the filesystem.
-
-**All shell and automation work** must go through `/python-scripts`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
+Read and follow `${CLAUDE_PLUGIN_ROOT}/skills/_shared/conventions.md`.
 
 1. Determine the range:
    - If a range is given (e.g., `v1.2.0..v1.3.0`), use it

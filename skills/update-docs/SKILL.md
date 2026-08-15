@@ -18,9 +18,7 @@ Scan recent changes and update documentation accordingly.
 
 ## Instructions
 
-**Filesystem investigation** must use Claude's built-in functions — `Read()` to read files, `Glob()` to find files by pattern, and `Grep()` to search file contents. Never shell out just to explore the filesystem.
-
-**All shell and automation work** must go through `/python-scripts`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
+Read and follow `${CLAUDE_PLUGIN_ROOT}/skills/_shared/conventions.md`.
 
 1. Compose a script to determine the scope of changes:
    - If a branch is provided, diff against main: `git diff main...<branch> --name-only`
