@@ -18,9 +18,7 @@ Scan infrastructure-as-code files and CI/CD config for issues.
 
 ## Instructions
 
-**Filesystem investigation** must use Claude's built-in functions — `Read()` to read files, `Glob()` to find files by pattern, and `Grep()` to search file contents. Never shell out just to explore the filesystem.
-
-**All shell and automation work** must go through `/python-scripts`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
+Read and follow `${CLAUDE_PLUGIN_ROOT}/skills/_shared/conventions.md`.
 
 1. Detect what infra tooling the project uses by looking for:
    - Terraform/OpenTofu: `*.tf` files
@@ -35,5 +33,11 @@ Scan infrastructure-as-code files and CI/CD config for issues.
    - Flag reliability issues (no health checks, missing restart policies, no resource constraints)
    - Flag drift risks (hardcoded values that should be variables, environment-specific config in shared files)
    - Check CI/CD for missing steps (no linting, no tests, no caching, no pinned action versions)
-4. **Bump the Helm chart version**: If any Helm charts exist (`**/Chart.yaml`), read each `Chart.yaml` and increment the `version` field (patch semver bump, e.g., `0.2.1` → `0.2.2`). Do **not** modify `appVersion` — only the chart `version`. This must happen on every run where changes are made, so consumers always get a new chart release.
-5. Present findings grouped by severity: **Critical**, **Warning**, **Info**
+4. Present findings grouped by severity: **Critical**, **Warning**, **Info**
+
+## This skill is read-only
+
+`/infra-check` audits and reports. It does not edit files, create branches, or
+commit. If the audit turns up changes worth making — including a Helm chart version
+bump — recommend them, and let the user run `/infra-edit`, which does that work in
+an isolated worktree.

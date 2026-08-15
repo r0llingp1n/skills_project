@@ -1,45 +1,57 @@
 ---
 name: ui-review
 user-invocable: false
-description: Detect UI changes needed in an issue and apply edits using web design guidelines and the frontend-design skill
+description: Apply web design guidelines to UI work within a sprint lane
 ---
 
 # UI Review
 
-This skill is invoked as a subagent by work-issue when an issue involves UI changes. It reviews the issue for frontend work, applies web design guidelines, and delegates the actual edits to the `frontend-design` skill from `anthropics/skills`.
+Inlined into a lane editor's context when any ticket in that lane carries a `ui`
+label or otherwise involves frontend work. It supplies the design standards the
+edits must meet; the editor still does the editing.
 
 ## Instructions
 
-**Filesystem investigation** must use Claude's built-in functions — `Read()` to read files, `Glob()` to find files by pattern, and `Grep()` to search file contents. Never shell out just to explore the filesystem.
+Read and follow `${CLAUDE_PLUGIN_ROOT}/skills/_shared/conventions.md`.
 
-**All shell and automation work** must go through `/python-scripts`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`.
+1. **Confirm UI relevance.** This applies when the lane's tickets show any of:
+   - labels `ui`, `frontend`, `design`, `ux`, `accessibility`, `css`, `styling`
+   - text describing visual changes, layout, components, responsiveness, or a11y
+   - predicted files under templates, stylesheets, components, or frontend source
 
-1. **Detect UI relevance**: Examine the issue title, body, and labels. If any of the following are present, this skill applies:
-   - Labels like `ui`, `frontend`, `design`, `ux`, `accessibility`, `css`, `styling`
-   - Issue text mentioning visual changes, layout, components, styling, responsiveness, or accessibility
-   - File paths referencing templates, stylesheets, components, or frontend code
+   If none apply, ignore this guidance and edit normally.
 
-2. **Load web design guidelines**: Read the guidelines from `.agents/skills/web-design-guidelines/SKILL.md` and fetch the latest rules from:
+2. **Load the guidelines.** Read
+   `${CLAUDE_PLUGIN_ROOT}/skills/ui-review/reference/web-design-guidelines.md`,
+   which ships with the plugin.
+
+   Optionally refresh against the upstream source if the network is available:
    ```
    https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md
    ```
-   All UI edits must comply with these guidelines.
+   Treat a fetch failure as a non-event — the bundled copy is authoritative and
+   sufficient. Do **not** block the lane on a network read.
 
-3. **Find affected UI files**: Use Glob and Grep to locate the frontend files relevant to the issue (e.g., `**/*.tsx`, `**/*.jsx`, `**/*.vue`, `**/*.svelte`, `**/*.html`, `**/*.css`, `**/*.scss`).
+3. **Locate the affected files.** Use `Glob`/`Grep` over the lane's predicted files
+   and their neighbours: `**/*.tsx`, `**/*.jsx`, `**/*.vue`, `**/*.svelte`,
+   `**/*.html`, `**/*.css`, `**/*.scss`.
 
-4. **Delegate edits via frontend-design**: Use `find-skills` to install and invoke the `frontend-design` skill from the official `anthropics/skills` registry:
-   ```
-   /plugin marketplace add anthropics/skills
-   /plugin install frontend-design@anthropic-agent-skills
-   ```
-   Then apply the skill's design principles when making edits — commit to a bold, context-appropriate aesthetic direction rather than generic defaults.
+4. **Make the edits**, ensuring each one:
+   - satisfies the ticket's acceptance criteria
+   - passes the guidelines checklist
+   - commits to a deliberate, context-appropriate aesthetic — typography, colour,
+     and spacing chosen on purpose rather than defaulted into
+   - matches the conventions already present in the codebase over any external
+     house style
 
-5. **Apply edits**: Make the UI changes in the worktree, ensuring each edit:
-   - Solves the issue requirements
-   - Passes the web design guidelines checklist
-   - Follows the frontend-design skill's standards (no generic "AI slop", deliberate typography/color/spacing choices)
+5. **Record design decisions** in the lane's ledger `what` entries, so they reach the
+   pull request rather than being lost: what was changed visually, and why that
+   direction was chosen.
 
-6. **Report findings**: Return a summary including:
-   - UI files modified
-   - Guidelines violations found and fixed
-   - Design decisions made and rationale
+## Notes
+
+- The `simplicity` reviewer will flag gratuitous abstraction in components, and the
+  `performance` reviewer will flag render-path costs. Expect UI lanes to draw
+  findings from all three lenses.
+- This skill installs nothing and fetches no plugins. If a richer design skill is
+  available in the session, use it; if not, the bundled guidelines stand alone.

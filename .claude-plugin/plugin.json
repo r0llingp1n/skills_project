@@ -1,18 +1,20 @@
 {
   "name": "aops-dev-workflow",
   "displayName": "AutonomousOps Dev Workflow",
-  "version": "0.1.1",
-  "description": "Agent-Teams-native dev workflow: parallel issue work, sprints with editor/reviewer teammates, PR review-and-merge loops, CI/infra audits, changelogs, and docs — plus batch/python script runners for single-approval automation.",
+  "version": "0.4.0",
+  "description": "Plan work into tickets, run them as conflict-free parallel lanes reviewed by a security/performance/simplicity panel, integrate locally into a sprint branch, and submit the pull request only when you say so.",
   "author": {
     "name": "Nathan M"
   },
+  "homepage": "https://github.com/r0llingp1n/skills_project",
+  "repository": "https://github.com/r0llingp1n/skills_project",
   "keywords": [
     "git",
     "github",
     "agent-teams",
+    "code-review",
     "ci-cd",
     "infrastructure",
-    "code-review",
     "workflow"
   ],
   "license": "MIT"

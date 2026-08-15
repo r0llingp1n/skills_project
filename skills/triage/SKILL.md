@@ -18,9 +18,7 @@ Scan open issues and present a prioritized summary.
 
 ## Instructions
 
-**Filesystem investigation** must use Claude's built-in functions — `Read()` to read files, `Glob()` to find files by pattern, and `Grep()` to search file contents. Never shell out just to explore the filesystem.
-
-**All shell and automation work** must go through `/python-scripts`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
+Read and follow `${CLAUDE_PLUGIN_ROOT}/skills/_shared/conventions.md`.
 
 1. Compose a script to run `gh issue list --state open --json number,title,labels,assignees,createdAt --limit 50` to fetch open issues
 2. If a label filter argument was provided (e.g., "bug"), filter results to matching labels

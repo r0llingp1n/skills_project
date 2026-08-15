@@ -17,9 +17,7 @@ Generate or update CI/CD configuration based on the project's stack.
 
 ## Instructions
 
-**Filesystem investigation** must use Claude's built-in functions — `Read()` to read files, `Glob()` to find files by pattern, and `Grep()` to search file contents. Never shell out just to explore the filesystem.
-
-**All shell and automation work** must go through `/python-scripts`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
+Read and follow `${CLAUDE_PLUGIN_ROOT}/skills/_shared/conventions.md`.
 
 1. Detect the project stack:
    - Language/runtime: look at source files, `package.json`, `requirements.txt`, `go.mod`, `Cargo.toml`, etc.
@@ -34,5 +32,8 @@ Generate or update CI/CD configuration based on the project's stack.
    - Build (if applicable)
    - Cache dependencies for speed
    - Pin action versions to SHAs
-4. Use the infra-edit skill (spawn as subagent) to make changes in an isolated worktree
+4. Make the changes in an isolated worktree: spawn a Task subagent with
+   `subagent_type: "general-purpose"` whose prompt inlines the full instructions from
+   `${CLAUDE_PLUGIN_ROOT}/skills/infra-edit/SKILL.md`, plus the specific CI changes
+   to make
 5. Report what was generated and the branch name

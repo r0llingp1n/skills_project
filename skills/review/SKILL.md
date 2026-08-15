@@ -17,9 +17,7 @@ Review a PR (by number) or a branch (by name) and provide structured feedback.
 
 ## Instructions
 
-**Filesystem investigation** must use Claude's built-in functions — `Read()` to read files, `Glob()` to find files by pattern, and `Grep()` to search file contents. Never shell out just to explore the filesystem.
-
-**All shell and automation work** must go through `/python-scripts`. Never run one-off shell commands; compose everything into small, idiomatic Python scripts in `/tmp/scripts/`. When searching, over-search in one script with response handling rather than asking permission for each command.
+Read and follow `${CLAUDE_PLUGIN_ROOT}/skills/_shared/conventions.md`.
 
 1. Determine if the argument is a PR number or branch name
    - If a number, compose a script to run `gh pr view <number> --json title,body,headRefName,files` and `gh pr diff <number>`
@@ -34,4 +32,10 @@ Review a PR (by number) or a branch (by name) and provide structured feedback.
    - **Blocking**: issues that must be fixed
    - **Suggestions**: non-blocking improvements
    - **Notes**: observations, questions, or praise
-4. If reviewing a PR, compose a script to post the review via `gh pr review <number>` with the appropriate flag (`--approve`, `--request-changes`, or `--comment`)
+4. If reviewing a PR, compose a script to post the review via `gh pr review <number>`:
+   - `--approve` when there are no Blocking findings
+   - `--comment -b "<feedback>"` when there are
+
+   **Never `--request-changes`.** GitHub rejects it on your own pull requests, and
+   PRs opened by this plugin are authored by the same account — so it fails in the
+   common case. `--comment` carries the same information.
