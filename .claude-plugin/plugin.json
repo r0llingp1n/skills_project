@@ -1,7 +1,7 @@
 {
   "name": "aops-dev-workflow",
   "displayName": "AutonomousOps Dev Workflow",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Plan work into tickets, run them as conflict-free parallel lanes reviewed by a security/performance/simplicity panel, integrate locally into a sprint branch, and submit the pull request only when you say so.",
   "author": {
     "name": "Nathan M"

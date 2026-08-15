@@ -142,7 +142,7 @@ hooks/
   gate-remote.sh         # the gate itself
 ```
 
-## Upgrading from 0.1.x
+## Upgrading to 0.4.0 from 0.1.x
 
 `/work-issue` is **removed** — `/sprint` subsumes it. The two shared thirteen of
 fourteen stages and had drifted apart.
