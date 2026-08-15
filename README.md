@@ -69,19 +69,31 @@ Every loop has a counter, a cap, and a named terminal state — see
 | Test/build retries | 2 | `TESTS FAILING` |
 | Integration conflicts | 2 | `BLOCKED` |
 | Teammate idle polls | 3 | `IDLE` |
-| Concurrent lanes | 4 | surplus queues |
+| Concurrent lanes | 2 | surplus queues |
+| `TeammateIdle` nudges | 2 per agent | agent may stop |
 | `/plan` items | 12 | stop and ask |
 | Follow-up recursion | depth 1 | create only, never auto-work |
 
-## The remote gate
+## What the hooks enforce
 
-`git push`, `gh pr create`, and `gh pr merge` are denied by
-[`hooks/gate-remote.sh`](hooks/gate-remote.sh) unless `/submit-pr` has recorded your
-confirmation for the current session. Skills and agents state the rule; the hook
-enforces it.
+Prose is something an agent can drift from; a denied tool call is not. Three gates
+ship with the plugin:
 
-This stops drift, not a determined adversary — an agent with `Bash` could write the
-approval marker itself. Drift is the failure mode that actually occurs.
+| Hook | Event | Refuses |
+| --- | --- | --- |
+| [`gate-remote.sh`](hooks/gate-remote.sh) | `PreToolUse` | `git push` / `gh pr create` / `gh pr merge` outside `/submit-pr` |
+| [`enforce-terminal-state.sh`](hooks/enforce-terminal-state.sh) | `TeammateIdle` | a teammate going idle while a lane has no terminal state |
+| [`enforce-task-complete.sh`](hooks/enforce-task-complete.sh) | `TaskCompleted` | closing a task whose lane still has open Blocking findings |
+
+Every one of them **fails open**, and the nudging gate is itself bounded at 2 per
+agent — a hook that could block forever would break the same invariant it exists to
+enforce.
+
+The remote gate stops drift, not a determined adversary: an agent with `Bash` could
+write the approval marker itself. Drift is the failure mode that actually occurs.
+
+Because teammate spawning needs an **interactive** session, `/sprint` cannot run
+headless under `-p` or the Agent SDK.
 
 ## Commands
 

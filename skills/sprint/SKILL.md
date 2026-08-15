@@ -52,8 +52,10 @@ nothing.
 
 Name each lane from a shared `lane-hint`, else from the longest common path prefix.
 
-Cap concurrent lanes at **4** (see `limits.md`). Surplus lanes queue and start as
-earlier lanes finish. Report the lane plan before spawning anything.
+Cap concurrent lanes at **2** (see `limits.md`). With the 3-lens panel that is 5
+concurrent teammates, the top of the range the Claude Code docs recommend. Surplus
+lanes queue and start as earlier lanes finish. Report the lane plan before spawning
+anything.
 
 ### 3. Create the sprint branch and per-lane worktrees
 
@@ -82,7 +84,7 @@ For each lane, `TaskCreate` a task carrying:
   `${CLAUDE_PLUGIN_ROOT}/skills/ui-review/SKILL.md`
 
 Then, **in a single message**, spawn:
-- one `aops-dev-workflow:editor` per active lane (≤4)
+- one `aops-dev-workflow:editor` per active lane (≤2)
 - three `aops-dev-workflow:reviewer` teammates, one per lens: `security`,
   `performance`, `simplicity`. Pass the lens in the spawn prompt; it is the only
   thing that differs between them.

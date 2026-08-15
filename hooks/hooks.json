@@ -1,5 +1,5 @@
 {
-  "description": "Gates remote git/gh operations behind the user-invoked /submit-pr skill",
+  "description": "Gates remote git/gh operations behind /submit-pr, and enforces that lanes reach a terminal state before teammates idle or tasks complete",
   "hooks": {
     "PreToolUse": [
       {
@@ -8,6 +8,30 @@
           {
             "type": "command",
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/gate-remote.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "TeammateIdle": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/enforce-terminal-state.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/enforce-task-complete.sh",
             "timeout": 10
           }
         ]

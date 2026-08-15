@@ -13,7 +13,8 @@ always terminates with a report — it never retries, and it never silently cont
 | Integration conflict resolution | the lead | **2** | `BLOCKED` |
 | Reviewer re-review, per lane | the reviewer | **5** | `REVIEW BUDGET EXHAUSTED` |
 | Teammate idle polling | the teammate | **3** consecutive empty polls | `IDLE` |
-| Concurrent lanes | the lead | **4** | surplus lanes queue |
+| Concurrent lanes | the lead | **2** | surplus lanes queue |
+| `TeammateIdle` nudges per agent | the hook | **2** | agent allowed to stop |
 | `/plan` decomposition | the lead | **12** items | stop and ask the user |
 | Follow-up ticket recursion | the lead | **depth 1** | create only; never auto-work |
 
@@ -39,6 +40,29 @@ without interpretation.
 
 - **`IDLE`** — three consecutive `TaskList` polls returned no claimable task.
   Message the lead `IDLE — no claimable tasks` and exit. Do not keep polling.
+
+## Why concurrent lanes is 2
+
+2 lane editors plus the 3-lens review panel is **5 concurrent teammates**, which is
+the top of the range the Claude Code docs recommend: "Start with 3-5 teammates for
+most workflows… Three focused teammates often outperform five scattered ones."
+Token cost scales linearly per teammate, and coordination overhead grows faster than
+throughput. Surplus lanes queue and start as earlier lanes finish, so raising this
+buys parallelism at a steepening price.
+
+## Enforcement
+
+Three of these caps are enforced by hooks rather than prose, since an agent can
+drift from an instruction but not from a denied tool call:
+
+- `hooks/gate-remote.sh` (`PreToolUse`) — denies push/PR operations outside `/submit-pr`
+- `hooks/enforce-terminal-state.sh` (`TeammateIdle`) — refuses idle while a lane has
+  no terminal state, at most twice per agent
+- `hooks/enforce-task-complete.sh` (`TaskCompleted`) — refuses to complete a task
+  whose lane still carries open Blocking findings
+
+The nudge hooks are themselves bounded, and every hook fails **open**. A hook that
+could block forever would break the very invariant it exists to enforce.
 
 ## Rules
 
