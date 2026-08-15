@@ -10,7 +10,7 @@ Instead of running bash commands one at a time, compose them into executable she
 
 ## Instructions
 
-**All shell work must go through batch scripts — no exceptions.** This includes exploratory commands like `ls`, `find`, `grep`, `git log`, `gh`, etc. Never run one-off shell commands directly; always compose them into a script first.
+**Shell work goes through batch scripts.** This includes exploratory commands like `ls`, `find`, `grep`, `git log`, and `gh`. Do not run one-off shell commands; compose them into a script first. This skill is the shell counterpart to `/python-scripts` — prefer that one by default, and use this when the task is genuinely better expressed as shell.
 
 When you need to explore or search the codebase, write a single script that over-searches rather than asking permission for each command. Include response handling in the script (e.g., `if [ -d ... ]`, checking `wc -l` output, grepping results) so the script definitively answers your question in one run. It is always better to search more than necessary in one script than to run multiple small commands that each require approval.
 
@@ -20,7 +20,9 @@ When you need to explore or search the codebase, write a single script that over
    - Start every script with `#!/usr/bin/env bash` and `set -euo pipefail`
    - Add brief comments explaining each block of commands
 3. Before writing any script, validate that it does **not** contain any of the following — refuse and explain if it does:
-   - `git push --force`, `git push -f`, or any force-push variant
+   - `git push` in any form, `gh pr create`, `gh pr merge` — remote operations are
+     reserved for `/submit-pr`, which only the user invokes, and a `PreToolUse` hook
+     denies them elsewhere
    - `rm -rf` or `rm -r` on paths outside the repo working tree
    - Deletion of non-git-tracked files (check with `git ls-files` first; untracked files need explicit user confirmation)
    - Deploy commands (`deploy`, `publish`, `release`, `kubectl apply`, `terraform apply`, `docker push`, etc.)
@@ -32,7 +34,11 @@ When you need to explore or search the codebase, write a single script that over
 
 ## Safety rules
 
-- Scripts may only create, modify, or delete files that are tracked by git or are inside the repo working tree
+- Scripts may only create, modify, or delete files that are (a) tracked by git or
+  inside the repo working tree, (b) inside `/tmp/scripts/`, or (c) inside a sprint
+  worktree (`/tmp/sprint-<n>-lane-<k>/`). Anything else needs explicit confirmation.
+  The `/tmp` exemptions matter: without them this rule forbids the script runner
+  from writing its own scripts.
 - Never force-push to any remote
 - Never run deploy/publish/release commands
 - When in doubt about whether an operation is destructive, ask the user before including it
