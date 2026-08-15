@@ -52,17 +52,26 @@ buys parallelism at a steepening price.
 
 ## Enforcement
 
-Three of these caps are enforced by hooks rather than prose, since an agent can
-drift from an instruction but not from a denied tool call:
+One cap is enforced by a hook rather than prose, since an agent can drift from an
+instruction but not from a denied tool call:
 
 - `hooks/gate-remote.sh` (`PreToolUse`) — denies push/PR operations outside `/submit-pr`
-- `hooks/enforce-terminal-state.sh` (`TeammateIdle`) — refuses idle while a lane has
-  no terminal state, at most twice per agent
-- `hooks/enforce-task-complete.sh` (`TaskCompleted`) — refuses to complete a task
+
+Two further gates are **written and verified but not currently registered**, in
+`hooks/team-hooks.json.disabled`:
+
+- `hooks/enforce-terminal-state.sh` (`TeammateIdle`) — would refuse idle while a lane
+  has no terminal state, at most twice per agent
+- `hooks/enforce-task-complete.sh` (`TaskCompleted`) — would refuse to complete a task
   whose lane still carries open Blocking findings
 
-The nudge hooks are themselves bounded, and every hook fails **open**. A hook that
-could block forever would break the very invariant it exists to enforce.
+With those two events present, **no** hook from this plugin registered at all — not
+even the `PreToolUse` gate in the same file. Until that is resolved, the lane
+terminal-state and task-completion rules are prose only. Treat them as binding
+anyway; they are the invariants, the hook was only going to be the enforcement.
+
+Every hook fails **open**, and the nudge gate is itself bounded. A hook that could
+block forever would break the very invariant it exists to enforce.
 
 ## Rules
 

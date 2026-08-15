@@ -79,15 +79,20 @@ Every loop has a counter, a cap, and a named terminal state — see
 Prose is something an agent can drift from; a denied tool call is not. Three gates
 ship with the plugin:
 
-| Hook | Event | Refuses |
-| --- | --- | --- |
-| [`gate-remote.sh`](hooks/gate-remote.sh) | `PreToolUse` | `git push` / `gh pr create` / `gh pr merge` outside `/submit-pr` |
-| [`enforce-terminal-state.sh`](hooks/enforce-terminal-state.sh) | `TeammateIdle` | a teammate going idle while a lane has no terminal state |
-| [`enforce-task-complete.sh`](hooks/enforce-task-complete.sh) | `TaskCompleted` | closing a task whose lane still has open Blocking findings |
+| Hook | Event | Refuses | Status |
+| --- | --- | --- | --- |
+| [`gate-remote.sh`](hooks/gate-remote.sh) | `PreToolUse` | `git push` / `gh pr create` / `gh pr merge` outside `/submit-pr` | **active** |
+| [`enforce-terminal-state.sh`](hooks/enforce-terminal-state.sh) | `TeammateIdle` | a teammate going idle while a lane has no terminal state | disabled |
+| [`enforce-task-complete.sh`](hooks/enforce-task-complete.sh) | `TaskCompleted` | closing a task whose lane still has open Blocking findings | disabled |
 
-Every one of them **fails open**, and the nudging gate is itself bounded at 2 per
-agent — a hook that could block forever would break the same invariant it exists to
-enforce.
+The two team hooks are written and verified but **not registered**: with those event
+names present, no hook from this plugin loaded at all, including the ordinary
+`PreToolUse` gate in the same file. Their config is parked in
+`hooks/team-hooks.json.disabled` with the evidence and how to retest. Until then
+those two rules are prose — still binding, just not enforced.
+
+Every hook **fails open**, and the nudging gate is itself bounded at 2 per agent — a
+hook that could block forever would break the same invariant it exists to enforce.
 
 The remote gate stops drift, not a determined adversary: an agent with `Bash` could
 write the approval marker itself. Drift is the failure mode that actually occurs.
