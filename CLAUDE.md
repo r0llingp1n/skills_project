@@ -59,6 +59,24 @@ These hold across every skill and agent. Breaking one is a bug, not a style choi
 Developing against un-pushed edits: `claude --plugin-dir .`, then `/reload-plugins`
 to pick up changes. **Hook changes need a full restart** — hooks load at session start.
 
+## Releasing
+
+Tags are **`X.Y.Z`, no `v` prefix** — `0.5.1`, not `v0.5.1`. The four historical
+`vX.Y.Z` tags were renamed to the unprefixed form at the same commits, so nothing
+in the repo or on the remote carries a `v` any more. Keep it that way.
+
+- **Annotate release tags** (`git tag -a`), with a message naming what the version
+  carries. `0.1.0` and `0.5.0` are lightweight for historical reasons; new ones
+  should not be.
+- **Bump `.claude-plugin/plugin.json` in the same release, on a branch, merged by
+  PR — then tag the merge commit.** That is how `0.4.0` and `0.5.1` were cut.
+- **The manifest version and the tag must agree.** The plugin cache is keyed on the
+  *manifest* version, not the tag: it installs to
+  `~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/`. `0.5.0` was tagged
+  while `plugin.json` still read `0.4.0`, so updates kept reinstalling over the
+  `0.4.0` directory and sessions went on loading pre-fix code after the fix had
+  merged. A tag without a matching bump ships nothing.
+
 ## Adding a skill
 
 Create `skills/<name>/SKILL.md` with front matter: `name` (matching the directory),
