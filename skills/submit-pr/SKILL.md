@@ -102,7 +102,12 @@ Rules for assembly:
   that were actually run. **Never add an aspirational entry**, and never write
   "tests pass" without the command and result that show it.
 
-Add a trailing line linking the tickets: `Closes #42, #43, #44`.
+Add a trailing line linking the tickets, with the closing keyword repeated **before
+every issue number**: `Closes #42, closes #43, closes #44`.
+
+GitHub only auto-closes the issue that directly follows a keyword. `Closes #42, #43,
+#44` closes #42 and silently ignores the rest — the PR merges, the extra issues stay
+open, and nothing reports it. Verify after merge and close any stragglers by hand.
 
 ### 5. Confirm with the user
 
