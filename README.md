@@ -47,7 +47,7 @@ hooks load at session start.
 1. **Lanes.** `/sprint` reads each ticket's `## Predicted files` block and groups
    tickets by file overlap using union-find — any two tickets sharing a file land in
    the same lane, transitively. Lanes cannot conflict with each other by construction.
-2. **Worktrees.** Each lane gets `sprint-<n>/lane-<k>` in `/tmp/sprint-<n>-lane-<k>`.
+2. **Worktrees.** Each lane gets `sprint-<n>-lane-<k>` in `/tmp/sprint-<n>-lane-<k>`.
    The **lead** allocates every branch name; editors never derive their own.
 3. **Panel review.** Three reviewers examine each lane in parallel, one per lens.
    Findings are consolidated and deduped before reaching the editor.
