@@ -21,7 +21,7 @@ the work is happening or lose it.
       "lane": 1,
       "name": "auth",
       "tickets": [42, 44],
-      "branch": "sprint-7/lane-1",
+      "branch": "sprint-7-lane-1",
       "worktree": "/tmp/sprint-7-lane-1",
       "status": "green",
       "cycles": 2,

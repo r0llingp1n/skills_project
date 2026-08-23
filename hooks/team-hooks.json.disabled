@@ -1,0 +1,46 @@
+{
+  "_why_disabled": [
+    "These two events registered nothing. With them present in hooks/hooks.json,",
+    "NO hook from this plugin appeared under /hooks — not even the ordinary",
+    "PreToolUse gate in the same file — across a quit/resume and a clean restart.",
+    "",
+    "That points at whole-file rejection on an unrecognized event name rather than",
+    "at these entries being skipped individually. Supporting evidence: no other",
+    "installed plugin uses either event. Across every hooks.json on this machine the",
+    "events in use are PreToolUse, PostToolUse, SessionStart, Stop, UserPromptSubmit,",
+    "and UserPromptExpansion. Both events are documented, so this may be a version",
+    "gate, may be tied to the agent-teams machinery, or may need the matcher omitted",
+    "the way SessionStart and Stop hooks omit it in working plugins.",
+    "",
+    "To re-enable: merge the `hooks` block below into hooks/hooks.json, restart",
+    "Claude Code (hooks load at session start), and check /hooks. If the PreToolUse",
+    "gate disappears again, the event name is the cause and this file stays disabled.",
+    "",
+    "The scripts themselves are verified and remain in hooks/. They block correctly",
+    "when fed payloads directly; only registration is in question."
+  ],
+  "hooks": {
+    "TeammateIdle": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/enforce-terminal-state.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/enforce-task-complete.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

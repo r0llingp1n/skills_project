@@ -63,8 +63,15 @@ Compose one script that:
 
 ```bash
 git checkout -b sprint-<n> main          # <n> = next unused sprint number
-git worktree add /tmp/sprint-<n>-lane-<k> -b sprint-<n>/lane-<k> sprint-<n>
+git worktree add /tmp/sprint-<n>-lane-<k> -b sprint-<n>-lane-<k> sprint-<n>
 ```
+
+Lane branches are `sprint-<n>-lane-<k>`, **hyphen not slash**. `sprint-<n>/lane-<k>`
+cannot exist alongside the `sprint-<n>` branch: git stores refs as paths, so
+`refs/heads/sprint-<n>` being a file makes `refs/heads/sprint-<n>/lane-<k>` an
+unrepresentable directory, and `git worktree add` fails with
+`cannot lock ref ... exists; cannot create`. The hyphen also makes the branch name
+match the worktree basename.
 
 **The lead allocates every branch name and worktree path.** Editors never derive
 their own — that is what previously caused two workers on the same ticket to collide
@@ -124,7 +131,7 @@ The moment a lane goes green, merge it while that lane's editor is still alive t
 resolve conflicts:
 
 ```bash
-git -C <sprint worktree> merge --no-ff sprint-<n>/lane-<k>
+git -C <sprint worktree> merge --no-ff sprint-<n>-lane-<k>
 ```
 
 On conflict, hand it back to that lane's editor with the conflicting paths. Allow
