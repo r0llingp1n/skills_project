@@ -1,0 +1,16 @@
+name: release version check
+
+# Runs on every X.Y.Z tag push. This is the moment the mistake is made, so it is
+# the moment to fail: a tag whose manifest version does not match ships nothing.
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  version-matches-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: manifest version must equal the tag
+        run: ./scripts/check-release-version.sh "${GITHUB_REF_NAME}"

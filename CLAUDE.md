@@ -76,6 +76,10 @@ in the repo or on the remote carries a `v` any more. Keep it that way.
   while `plugin.json` still read `0.4.0`, so updates kept reinstalling over the
   `0.4.0` directory and sessions went on loading pre-fix code after the fix had
   merged. A tag without a matching bump ships nothing.
+- **Check before you push the tag:** `scripts/check-release-version.sh <tag>`.
+  CI runs the same script on every `X.Y.Z` tag push. This rule was written down
+  after `0.5.0` and broken again at `0.5.2` anyway — prose did not hold, so the
+  check is mechanical now.
 
 ## Adding a skill
 
