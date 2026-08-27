@@ -22,7 +22,21 @@ after the user has confirmed the pull request body.
 /submit-pr 7
 ```
 
-With no argument, use the most recent sprint under `.claude/sprints/`.
+With no argument, submit **the branch that is currently checked out**. Find the
+ledger under `.claude/sprints/` whose `branch` matches it; that ledger's `base` is
+the pull request's target.
+
+The shape is `base -> feature branch -> PR against base`. A sprint cut from `main`
+targets `main`; one cut from a feature branch targets that feature branch. Do not
+assume `main`.
+
+With a sprint number, submit that sprint's branch instead — check it out first if
+it is not current, and still target its recorded `base`.
+
+**Do not fall back to "the most recent sprint."** The newest ledger is frequently
+not the branch in hand: it may already be merged, or work may be sitting on a
+branch that was never a sprint at all. Submitting the wrong branch is worse than
+stopping.
 
 ## Instructions
 
@@ -30,10 +44,26 @@ Read and follow:
 - `${CLAUDE_PLUGIN_ROOT}/skills/_shared/conventions.md`
 - `${CLAUDE_PLUGIN_ROOT}/skills/_shared/ledger.md`
 
-### 1. Load the ledger
+### 1. Resolve the branch and load the ledger
 
-Read `.claude/sprints/sprint-<n>/ledger.json`. If it is missing, stop — there is
-nothing to submit, and a PR body cannot be reconstructed after the fact.
+```bash
+git branch --show-current
+```
+
+Find the ledger under `.claude/sprints/*/ledger.json` whose `branch` field equals
+that branch, and read `base` from it. Three cases:
+
+- **A ledger matches.** Normal path. Continue.
+- **A ledger matches but has no `base`** (written before `base` was recorded).
+  Ask which branch to target rather than guessing — `git merge-base` cannot
+  recover the branch point once lane merges exist.
+- **No ledger matches.** The branch was not produced by `/sprint`. Say so, and ask
+  whether to proceed: a body can still be written by hand from the commits and the
+  diff, but it will not carry the `WHY` a ledger preserves. Do not invent
+  rationale. Ask which branch to target.
+
+If the resolved branch is already merged into its base, or has no commits the base
+lacks, stop and report it — there is nothing to submit.
 
 ### 2. Check lane status
 
@@ -55,13 +85,19 @@ sprint branch, so their work is simply absent from the PR — say so plainly.
 
 ### 3. Verify the branch
 
-Confirm the sprint branch exists, is checked out or reachable, and that its merge
-commits match the green lanes in the ledger:
+Confirm the branch exists, is checked out or reachable, and that its merge commits
+match the green lanes in the ledger. Compare against the ledger's `base`, never a
+hardcoded `main`:
 
 ```bash
-git log main..sprint-<n> --oneline --merges
-git diff main...sprint-<n> --stat
+git fetch origin                              # base may have moved
+git log <base>..<branch> --oneline --merges
+git diff <base>...<branch> --stat
 ```
+
+Update the local base first if it is behind its remote. A stale base inflates the
+diff with commits already merged, and the pull request then appears to re-propose
+another branch's work.
 
 If a green lane has no corresponding merge commit, stop and report the discrepancy
 rather than opening a PR that misrepresents its contents.
@@ -127,11 +163,15 @@ Only after explicit confirmation:
    If the session id is not available in the environment, read it from the hook's
    own denial message, or ask the user to run `/hooks` — do **not** work around the
    gate by other means.
-2. Push and open the PR:
+2. Push and open the PR, targeting the ledger's `base` explicitly:
    ```bash
-   git push -u origin sprint-<n>
-   gh pr create --title "<title>" --body-file /tmp/scripts/pr-body-<n>.md
+   git push -u origin <branch>
+   gh pr create --base <base> --head <branch> \
+     --title "<title>" --body-file /tmp/scripts/pr-body-<n>.md
    ```
+   `--base` is not optional. Without it `gh` uses the repository's default branch,
+   which silently retargets a stacked sprint at `main` and drags its parent's
+   commits into the diff.
 3. **Remove the marker immediately** so the gate closes behind you:
    ```bash
    rm -f .claude/sprints/sprint-<n>/SUBMIT_APPROVED
@@ -146,7 +186,10 @@ behind — a reminder of what is still outstanding and the suggested follow-up t
 ## Rules
 
 - **Never merge the pull request.** Opening it is where this skill stops.
-- Never push a branch other than the sprint branch named in the ledger.
+- Push only the branch resolved in step 1 — the one checked out, or the one named
+  by an explicit sprint number. Never substitute a different branch because it
+  looks newer or more complete.
+- Open the pull request against the ledger's `base`. Never assume `main`.
 - Never write the approval marker before the user has confirmed. The marker is a
   record of consent, not a convenience.
 - If the push or PR creation fails, do not retry automatically. Remove the marker,

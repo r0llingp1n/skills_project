@@ -14,6 +14,7 @@ the work is happening or lose it.
 {
   "sprint": 7,
   "branch": "sprint-7",
+  "base": "main",
   "created": "2026-08-15",
   "objective": "Add SSO and fix token refresh",
   "lanes": [
@@ -55,6 +56,12 @@ the work is happening or lose it.
 
 ## Field contracts
 
+- **`base`** — the branch that was checked out when the sprint started, i.e. the
+  branch `sprint-<n>` was cut from. `/submit-pr` opens the pull request **against
+  this**, so a sprint cut from a feature branch targets that feature branch rather
+  than `main`. Recorded at sprint start because it cannot be recovered afterwards:
+  once the sprint branch has merge commits, `git merge-base` cannot tell which
+  ancestor was the branch point.
 - **`status`** — `green` | `UNFINISHED` | `TESTS FAILING` | `BLOCKED`. Only `green`
   lanes are merged into the sprint branch, and only a ledger with no non-`green`
   lanes may be submitted without an explicit user override.

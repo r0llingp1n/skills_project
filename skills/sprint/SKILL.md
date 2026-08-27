@@ -62,9 +62,18 @@ anything.
 Compose one script that:
 
 ```bash
-git checkout -b sprint-<n> main          # <n> = next unused sprint number
+base="$(git branch --show-current)"      # whatever is checked out NOW
+git checkout -b sprint-<n> "$base"       # <n> = next unused sprint number
 git worktree add /tmp/sprint-<n>-lane-<k> -b sprint-<n>-lane-<k> sprint-<n>
 ```
+
+The sprint branches from **the branch that is currently checked out**, not from
+`main`. A sprint started on a feature branch belongs on that feature branch, and
+`/submit-pr` will open its pull request against it.
+
+Record that branch as `base` in the ledger **at this point**. It cannot be
+recovered later: once `sprint-<n>` carries lane merge commits, `git merge-base`
+cannot distinguish the branch point from any other ancestor.
 
 Lane branches are `sprint-<n>-lane-<k>`, **hyphen not slash**. `sprint-<n>/lane-<k>`
 cannot exist alongside the `sprint-<n>` branch: git stores refs as paths, so
@@ -77,8 +86,9 @@ match the worktree basename.
 their own — that is what previously caused two workers on the same ticket to collide
 on an identical branch name.
 
-Create `.claude/sprints/sprint-<n>/ledger.json` per `ledger.md`, with the lane
-identity fields filled in and `status: "pending"` for each lane.
+Create `.claude/sprints/sprint-<n>/ledger.json` per `ledger.md`, with `base` set
+to the branch recorded above, the lane identity fields filled in, and
+`status: "pending"` for each lane.
 
 ### 4. Create tasks and spawn the team
 
