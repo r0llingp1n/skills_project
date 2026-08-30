@@ -119,6 +119,7 @@ headless under `-p` or the Agent SDK.
 | `/update-docs` | Update documentation to reflect recent changes |
 | `/batch-scripts` | Compose bash into one script for single-approval execution |
 | `/python-scripts` | Compose automation into Python scripts for single-approval execution |
+| `/alphabetize-declarations` | Keep Makefile targets and other declaration lists sorted |
 
 Non-invocable helpers (`infra-edit`, `ui-review`, `example`) are inlined into other
 skills' subagent prompts.
