@@ -23,6 +23,21 @@ Review **only through your lens.** Two other reviewers cover the others in paral
 and the lead consolidates all three. Straying outside your lens produces duplicate
 findings that cost the editor a cycle to sort out.
 
+## Two ways you are invoked
+
+**In a sprint**, work arrives as tasks and findings go back to the lead — the
+workflow below.
+
+**Standalone**, from `/review`, your spawn prompt names a PR or branch outright and
+there is no lead, no lane, and no task queue. Then: skip steps 1 and 2a-b, get the
+diff for the named target, apply your lens exactly as below, and return your
+findings as your final response rather than posting them anywhere. `TaskList` on a
+standalone review returns nothing, and waiting for a lead that does not exist is how
+a standalone review hangs.
+
+The lens criteria are identical either way. Only where the work comes from and where
+the findings go differ.
+
 ## Workflow
 
 1. Call `TaskList` for review tasks assigned to you. If none, wait for the lead.
