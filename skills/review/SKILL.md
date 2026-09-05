@@ -1,7 +1,7 @@
 ---
 name: review
 user-invocable: true
-description: Review a pull request or branch through a security/performance/simplicity panel
+description: Review a pull request or branch through a security/performance/simplicity panel, plus an infrastructure reviewer when the diff touches IaC, containers, or CI config
 ---
 
 # Review
@@ -38,9 +38,29 @@ Read and follow `${CLAUDE_PLUGIN_ROOT}/skills/_shared/conventions.md`.
    One general-purpose reviewer produces a shallower pass than three focused ones,
    and its findings drift toward whichever concern it noticed first.
 
-3. Merge the three result sets and **dedupe overlapping findings** — simplicity and
+   **In the same message**, if any changed file is infrastructure config, spawn a
+   fourth `aops-dev-workflow:reviewer` with lens `infra`. Infrastructure config
+   means any of:
+   - Terraform/OpenTofu: `*.tf`, `*.tfvars`
+   - Containers: `Dockerfile*`, `docker-compose*.yml`, `*.containerfile`
+   - CI/CD: `.github/workflows/`, `.gitlab-ci.yml`, `Jenkinsfile`, `.circleci/`
+   - Kubernetes/Helm: `k8s/`, `charts/`, `Chart.yaml`, any `*.yaml` containing `apiVersion:`
+   - Cloud config: `serverless.yml`, `cdk.json`, `pulumi.*`, `template.yaml`, `samconfig.toml`
+   - Ansible: `playbook*.yml`, `roles/`, `inventory*`
+
+   The `infra` spawn prompt carries everything the other three do, plus the list of
+   changed infra files. The lens itself — reading
+   `${CLAUDE_PLUGIN_ROOT}/skills/infra-check/SKILL.md`, its checklists, and the
+   severity mapping — is defined in `agents/reviewer.md`, not here.
+
+   Skip the infra reviewer when no changed file matches. An infra review of a diff
+   with no infra in it produces only "worth confirming" noise.
+
+3. Merge the result sets and **dedupe overlapping findings** — simplicity and
    performance routinely flag the same redundant loop, and reporting it twice reads
-   as two problems. Present the consolidated set as:
+   as two problems, and a `security` finding and an `infra` finding on the same
+   hardcoded secret are one finding, filed once under Blocking. Present the
+   consolidated set as:
    - **Blocking**: issues that must be fixed
    - **Suggestions**: non-blocking improvements
    - **Notes**: observations, questions, or praise

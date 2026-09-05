@@ -108,13 +108,13 @@ headless under `-p` or the Agent SDK.
 | `/sprint <n...>` | Run tickets as parallel lanes with panel review and local integration |
 | `/submit-pr [n]` | **You only.** Push the sprint branch, open a PR with WHAT/WHY/TESTING |
 | `/triage` | List and prioritize open issues |
-| `/review [pr-or-branch]` | Ad-hoc review of a single PR or branch |
+| `/review [pr-or-branch]` | Ad-hoc panel review of a single PR or branch, plus an infra lens when IaC/CI files change |
 | `/changelog` | Generate or update CHANGELOG from merged PRs and commits |
 | `/ci-status [branch-or-pr]` | Check CI/CD pipeline status |
 | `/scaffold-ci` | Generate or update CI/CD pipeline config |
 | `/test-branch [branch]` | Run the test suite against a branch in its worktree |
 | `/cleanup-worktrees` | Remove worktrees for merged branches |
-| `/infra-check [category]` | Audit infra config — read-only |
+| `/infra-check` | Review infra changes for stability, architecture, performance, idiom, and simplicity |
 | `/doc-review` | Check docs for staleness, broken references, and gaps |
 | `/update-docs` | Update documentation to reflect recent changes |
 | `/batch-scripts` | Compose bash into one script for single-approval execution |
@@ -129,7 +129,7 @@ skills' subagent prompts.
 - **`aops-dev-workflow:editor`** — owns one lane, implements it in its assigned
   worktree, and resolves review findings over up to 5 cycles
 - **`aops-dev-workflow:reviewer`** — examines a lane through one assigned lens;
-  three are spawned per sprint
+  three are spawned per sprint, and `/review` adds a fourth (`infra`) when the diff touches infrastructure config
 
 ## Layout
 
