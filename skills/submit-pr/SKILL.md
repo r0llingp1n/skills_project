@@ -150,10 +150,20 @@ repository takes the same form with its full name, `closes owner/repo#123`.
 The keywords are `close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`,
 `resolves`, `resolved`.
 
-**The pull request must target the repository's DEFAULT branch or nothing closes
-at all.** GitHub interprets these keywords *only* when the PR targets the default
-branch — it does not defer them, and it does not warn. A PR merged into any other
-branch links the issues in the UI and leaves every one of them open.
+**The pull request must target the repository's DEFAULT branch or nothing happens
+at all.** GitHub's own wording: the keywords "are interpreted only when the pull
+request targets the repository's *default* branch. If the pull request targets
+*any other branch*, then these keywords are ignored, **no links are created**,
+and merging the PR has no effect on the issues."
+
+Note what that says. The issues are not linked-but-left-open — nothing is created
+in the first place, and nothing is deferred to a later merge. There is **no
+repository or organisation setting that changes this**; the only lever is which
+branch is default.
+
+The PR *body* still cross-references the issue immediately regardless of base, so
+a stacked PR does appear on the issue's timeline — but as a cross-reference, not
+a link, and merging it closes nothing.
 
 That is not an edge case for this plugin, it is the normal case. A sprint branches
 from whatever is checked out, so a sprint cut from another sprint targets that

@@ -118,8 +118,14 @@ Then, **in a single message**, spawn:
 
 Each editor claims its lane task, works in its assigned worktree, implements the
 tickets, runs tests and build (≤2 retries, then `TESTS FAILING`), commits
-referencing the ticket numbers, and appends `what` and `testing` entries to the
+**naming its ticket numbers in the subject line** per "Name the ticket in every
+commit" in `conventions.md`, and appends `what` and `testing` entries to the
 ledger. Editors do **not** push and do **not** open PRs.
+
+A lane covering several tickets names each one on the commit that serves it —
+`(#119, #117)` when a single commit serves both. That is what makes
+`git log --grep` answer "what work touched this ticket" later, on any branch,
+whatever happens to the pull request.
 
 ### 6. Review panel
 
