@@ -141,9 +141,34 @@ Rules for assembly:
 Add a trailing line linking the tickets, with the closing keyword repeated **before
 every issue number**: `Closes #42, closes #43, closes #44`.
 
-GitHub only auto-closes the issue that directly follows a keyword. `Closes #42, #43,
-#44` closes #42 and silently ignores the rest — the PR merges, the extra issues stay
-open, and nothing reports it. Verify after merge and close any stragglers by hand.
+There is no shorthand for this. GitHub's documentation is explicit — *"Use full
+syntax for each issue"* — and only the issue directly following a keyword is
+linked. `Closes #42, #43, #44` closes #42 and silently ignores the rest: the PR
+merges, the extra issues stay open, and nothing reports it. An issue in another
+repository takes the same form with its full name, `closes owner/repo#123`.
+
+The keywords are `close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`,
+`resolves`, `resolved`.
+
+**The pull request must target the repository's DEFAULT branch or nothing closes
+at all.** GitHub interprets these keywords *only* when the PR targets the default
+branch — it does not defer them, and it does not warn. A PR merged into any other
+branch links the issues in the UI and leaves every one of them open.
+
+That is not an edge case for this plugin, it is the normal case. A sprint branches
+from whatever is checked out, so a sprint cut from another sprint targets that
+sprint, not `main`. **Every stacked pull request therefore closes nothing on its
+own merge.** Say so when you report, rather than leaving the user to discover it:
+the issues close only when the branch that finally lands on the default branch
+carries those keywords, and until then they must be closed by hand.
+
+This was measured, not assumed. Two PRs merged minutes apart from the same
+session: the one targeting `main` closed all seven of its issues; the one
+targeting a sprint branch closed none of its eight, with identical syntax.
+
+So after merge, verify. `gh issue view <n> --json state` per ticket is enough, and
+it is the only thing that distinguishes "the keywords worked" from "the keywords
+were never read".
 
 ### 5. Confirm with the user
 
