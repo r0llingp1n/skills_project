@@ -71,6 +71,14 @@ The sprint branches from **the branch that is currently checked out**, not from
 `main`. A sprint started on a feature branch belongs on that feature branch, and
 `/submit-pr` will open its pull request against it.
 
+One consequence is worth knowing here rather than after the merge: GitHub
+interprets `Closes #42` **only** when a pull request targets the repository's
+default branch. A sprint stacked on another branch closes none of its issues when
+its own PR merges, whatever the body says, and nothing reports that. The tickets
+close only when whatever finally reaches the default branch carries those
+keywords; until then they are closed by hand. So do not read a still-open ticket
+as evidence the work did not land.
+
 Record that branch as `base` in the ledger **at this point**. It cannot be
 recovered later: once `sprint-<n>` carries lane merge commits, `git merge-base`
 cannot distinguish the branch point from any other ancestor.
